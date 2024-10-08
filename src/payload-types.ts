@@ -12,12 +12,17 @@ export interface Config {
   };
   collections: {
     users: User;
+    party: Party;
     media: Media;
+    stadiums: Stadium;
+    payments: Payment;
+    bookings: Booking;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   globals: {};
   locale: null;
@@ -48,7 +53,11 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
+  role: 'user' | 'stadium_owner' | 'admin';
+  name: string;
+  phone?: string | null;
+  party?: (number | Party)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -62,10 +71,23 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "party".
+ */
+export interface Party {
+  id: number;
+  name: string;
+  captain: number | User;
+  members?: (number | User)[] | null;
+  inviteCode?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -81,13 +103,115 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stadiums".
+ */
+export interface Stadium {
+  id: number;
+  name: string;
+  owner: number | User;
+  location: {
+    address: string;
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    coordinates?: [number, number] | null;
+  };
+  hourlyRate: number;
+  amenities?:
+    | {
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  images?:
+    | {
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: number;
+  booking: number | Booking;
+  user: number | User;
+  amount: number;
+  status: 'pending' | 'completed' | 'failed';
+  paymentMethod: string;
+  transactionId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings".
+ */
+export interface Booking {
+  id: number;
+  stadium: number | Stadium;
+  party: number | Party;
+  startTime: string;
+  endTime: string;
+  totalAmount: number;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  payments?: (number | Payment)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: number;
+  document?:
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'party';
+        value: number | Party;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'stadiums';
+        value: number | Stadium;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
+      } | null)
+    | ({
+        relationTo: 'bookings';
+        value: number | Booking;
+      } | null);
+  globalSlug?: string | null;
+  user: {
+    relationTo: 'users';
+    value: number | User;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -107,7 +231,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
