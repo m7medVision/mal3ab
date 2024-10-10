@@ -1,7 +1,14 @@
+import { Admin_or_Self } from "@/access/admin_or_self";
 import { CollectionConfig } from "payload";
 
 export const Payments: CollectionConfig = {
   slug: 'payments',
+  access: {
+    read: () => true,
+    create: Admin_or_Self,
+    update: () => false,
+    delete: () => false
+  },
   fields: [
     {
       name: 'booking',
