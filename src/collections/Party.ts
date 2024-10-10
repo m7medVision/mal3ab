@@ -2,6 +2,12 @@ import { CollectionConfig } from "payload";
 
 export const Party: CollectionConfig = {
   slug: 'party',
+  access: {
+    read: () => true,
+    create: () => true,
+    update: () => true,
+    delete: () => true
+  },
   fields: [
     {
       name: 'name',
