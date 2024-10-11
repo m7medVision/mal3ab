@@ -1,11 +1,11 @@
 import { Access } from "payload";
-export const captain: Access = async ({ req }) => {
-  if (!req.user) {
+export const CaptainOnly: Access = async ({ req: { user } }) => {
+  if (!user) {
     return false;
   } else {
     return {
       captain: {
-        equals: req.user.id
+        equals: user?.id
       }
     }
   }
