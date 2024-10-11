@@ -1,7 +1,14 @@
+import { admin_only } from "@/access/admin_only";
 import { CollectionConfig } from "payload";
 
 export const Bookings: CollectionConfig = {
   slug: 'bookings',
+  access: {
+    read: () => true,
+    create: admin_only,
+    update: admin_only,
+    delete: admin_only,
+  },
   fields: [
     {
       name: 'stadium',
