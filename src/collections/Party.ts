@@ -1,3 +1,4 @@
+import { AdminOrCaptain, CaptainOnly } from "@/access/captain";
 import { CollectionConfig } from "payload";
 
 export const Party: CollectionConfig = {
@@ -5,8 +6,8 @@ export const Party: CollectionConfig = {
   access: {
     read: () => true,
     create: () => true,
-    update: () => true,
-    delete: () => true
+    update: CaptainOnly,
+    delete: AdminOrCaptain
   },
   fields: [
     {
@@ -24,6 +25,9 @@ export const Party: CollectionConfig = {
       name: 'members',
       type: 'relationship',
       relationTo: 'users',
+      access: {
+        update: () => true,
+      },
       hasMany: true,
     },
     {
