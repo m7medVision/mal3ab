@@ -1,3 +1,4 @@
+import '../globals.css'
 export const metadata = {
   title: 'Mal3ab - Home',
   description: 'Mal3ab is a platform to make booking stadiums easier',
