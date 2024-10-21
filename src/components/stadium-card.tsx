@@ -2,16 +2,18 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { MapPin, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 interface StadiumCardProps {
   name: string
   location: string
   price: number
   images: string[]
+  id: number
 }
-export function StadiumCardComponent({ name, location, price, images }: StadiumCardProps) {
+export function StadiumCardComponent({ name, location, price, images, id }: StadiumCardProps) {
   const [currentImage, setCurrentImage] = useState(0)
   const nextImage = () => {
     setCurrentImage((prev) => (prev + 1) % images.length)
@@ -63,7 +65,7 @@ export function StadiumCardComponent({ name, location, price, images }: StadiumC
         </div>
       </CardHeader>
       <CardContent>
-        <Button className="w-full">Book the stadium</Button>
+        <Link href={'/stadiums/' + id} className={buttonVariants({})}>Book the stadium</Link>
       </CardContent>
     </Card>
   )
