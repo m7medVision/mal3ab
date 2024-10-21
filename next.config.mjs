@@ -7,6 +7,9 @@ const nextConfig = {
       {
         hostname: 'picsum.photos',
       },
+      {
+        hostname: "placeholder.pics"
+      }
     ],
   },
 }
