@@ -10,6 +10,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import Link from 'next/link'
+
+const STADIUM_LAT = 40.7128
+const STADIUM_LON = -74.0060
 
 export default function StadiumBookingPage() {
   const stadiumImages = [
@@ -58,15 +62,19 @@ export default function StadiumBookingPage() {
                 <MapPin className="mr-2 h-5 w-5 text-muted-foreground" />
                 <span>123 Stadium Street, Sportsville, SP 12345</span>
               </div>
-              <div className="rounded-lg overflow-hidden h-[200px]">
-                <Image
-                  src="/placeholder.svg?height=200&width=400&text=Map+Location"
-                  alt="Stadium location map"
-                  width={400}
-                  height={200}
-                  className="w-full h-full object-cover"
-                />
+              <div
+                className="rounded-lg overflow-hidden h-[200px] cursor-pointer"
+                role="button"
+                aria-label="Open in Google Maps"
+              >
+                <iframe
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${STADIUM_LON - 0.01},${STADIUM_LAT - 0.01},${STADIUM_LON + 0.01},${STADIUM_LAT + 0.01}&layer=mapnik&marker=${STADIUM_LAT},${STADIUM_LON}`}
+                  width="100%"
+                  height="100%"
+                  title="Stadium Location"
+                ></iframe>
               </div>
+              <Link href={`https://www.google.com/maps/search/?api=1&query=${STADIUM_LAT},${STADIUM_LON}`} className="text-sm text-muted-foreground mt-2">Open in Google map</Link>
             </div>
             <div>
               <h2 className="text-xl font-semibold mb-4">Pricing</h2>
