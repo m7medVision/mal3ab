@@ -1,6 +1,12 @@
 import { StadiumCardComponent } from "@/components/stadium-card";
 import { faker } from "@faker-js/faker"
-export default function Page() {
+import { getPayloadHMR } from "@payloadcms/next/utilities"
+import config from "@payload-config"
+export default async function Page() {
+  const payload = await getPayloadHMR({ config })
+  console.log(await payload.find({
+    collection: "stadiums",
+  }))
   return (
     <div className="mx-auto w-5/6">
       <h1 className="text-4xl font-bold pt-10 pb-2">Book a Stadium</h1>
