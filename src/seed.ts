@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker"
-import { Payload } from "payload"
+import { Payload as Payload_Type } from "payload"
+import payload from "payload"
+import config from "@payload-config"
 
-export const seed = async (payload: Payload): Promise<void> => {
+export const seed = async (payload: Payload_Type): Promise<void> => {
   payload.logger.info('Seeding data...')
   // seeding users data
   for (let i = 0; i < 5; i++) {
@@ -31,10 +33,14 @@ export const seed = async (payload: Payload): Promise<void> => {
   }
   payload.logger.info('Data seeded successfully')
 }
-async function randomUser(payload: Payload) {
+async function randomUser(payload: Payload_Type) {
   const users = await payload.find({
     collection: 'users',
     limit: 5,
   })
   return Math.floor(Math.random() * users.docs.length)
 }
+const payloadx = await payload.init({
+  config,
+})
+seed(payloadx)
