@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { MapPin, Clock, DollarSign, User } from 'lucide-react'
+import { MapPin, Clock, User } from 'lucide-react'
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,11 +11,21 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Link from 'next/link'
+import { getPayloadHMR } from '@payloadcms/next/utilities'
+import config from "@payload-config"
 
-const STADIUM_LAT = 40.7128
-const STADIUM_LON = -74.0060
 
-export default function StadiumBookingPage() {
+
+export default async function StadiumBookingPage({ params }: { params: Promise<{ id: string }> }) {
+  const stadiumId = await params.then(({ id }) => id)
+  const payload = await getPayloadHMR({ config })
+  const stadium = await payload.findByID({
+    collection: "stadiums",
+    id: stadiumId,
+    depth: 1
+  })
+  const STADIUM_LAT = stadium.location.coordinates?.[1] || 40.73061
+  const STADIUM_LON = stadium.location.coordinates?.[0] || -73.93524
   const stadiumImages = [
     "https://picsum.photos/1000/1000?random=1",
     "https://picsum.photos/1000/1000?random=2",
@@ -28,10 +38,11 @@ export default function StadiumBookingPage() {
       <Card className="overflow-hidden">
         <CardContent className="p-6">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-2">Riverside Arena</h1>
+            <h1 className="text-3xl font-bold mb-2">{stadium.name}</h1>
             <div className="flex items-center text-muted-foreground">
               <User className="mr-2 h-4 w-4" />
-              <span>Owned by John Doe</span>
+              {/* @ts-ignore */}
+              <span>Owned by {stadium.owner.name}</span>
             </div>
           </div>
 
@@ -60,7 +71,7 @@ export default function StadiumBookingPage() {
               <h2 className="text-xl font-semibold mb-4">Location</h2>
               <div className="flex items-center mb-2">
                 <MapPin className="mr-2 h-5 w-5 text-muted-foreground" />
-                <span>123 Stadium Street, Sportsville, SP 12345</span>
+                <span>{stadium.location.address}</span>
               </div>
               <div
                 className="rounded-lg overflow-hidden h-[200px] cursor-pointer"
@@ -86,8 +97,7 @@ export default function StadiumBookingPage() {
                       <span>Per Hour</span>
                     </div>
                     <div className="flex items-center font-semibold">
-                      <DollarSign className="mr-1 h-5 w-5" />
-                      <span>150</span>
+                      <span>{stadium.hourlyRate} OMR.</span>
                     </div>
                   </div>
                 </CardContent>
