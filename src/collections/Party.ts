@@ -34,6 +34,11 @@ export const Party: CollectionConfig = {
       name: 'inviteCode',
       type: 'text',
       unique: true,
+    },
+    {
+      name: "isPublic",
+      type: "checkbox",
+      defaultValue: false,
     }
   ]
 }
