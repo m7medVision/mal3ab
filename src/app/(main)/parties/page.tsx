@@ -2,8 +2,19 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { sql } from 'drizzle-orm' 
 export default async function Page() {
   const payload = await getPayloadHMR({ config })
+  // get parties that is public
+  const parties = await payload.find({
+    collection: 'party',
+    where: {
+      isPublic: {
+        equals: true
+      }
+    }
+  })
+  // parties that ve 
   return (
     <div className="container mx-auto max-w-7xl px-4">
       <h1 className="text-4xl font-bold pt-10 pb-2 text-center">Book a Stadium</h1>
